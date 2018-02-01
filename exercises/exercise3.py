@@ -2,7 +2,7 @@
 
 import re
 
-
+# dictionary with availables routing protocols
 def protocol_identify(protocolT):
 	switcher = {
 		'R': 'RIP',
@@ -39,7 +39,9 @@ def protocol_identify(protocolT):
 # regex to detect directly connected
 # C\s*(?P<NET>([0-9]{1,3}|\.){7})\b\s*\b(?P<MASK>([0-9]{1,3}|\.){7})\b\s*.+?,\s*(?P<INT>\w+)
 
+# variable initialisation
 filename = 'ShowIpRoute.txt'
+# regex that split the input line into elements of interest
 lit_protocol = r'(?P<PROTO>(R|M|B|D|EX|O|IA|N1|N2|E1|E2|E|i|su|L1|L2|ia|U|o|p|H|l|a|O\s+E[12])+?)\b\s*\b(?P<NET>(0{,2}[1-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.(0{,2}[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.(0{,2}[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.(0{,2}[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))\b\s*\[(?P<COST>\d+/\d+)\]\s*via\s*\b(?P<NEXT>(0{,2}[1-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.(0{,2}[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.(0{,2}[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.(0{,2}[1-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))\b\s*,?\s*(?P<UPD>(\d|\:)+)\s*,\s*(?P<INT>\w+)\s*'
 re_protocol = re.compile(lit_protocol)
 
@@ -48,9 +50,10 @@ try:
 	line = f.readline()
 
 	while line != '':
-		# by protocol route
+		# apply the regex
 		match = re.match(re_protocol, line)
 		if match:
+			# print values
 			print '\n------------------------\n'
 			print "Protocol: " + protocol_identify(match.group('PROTO')) + '\n'
 			print "Prefix: " + match.group('NET') + '\n'
@@ -62,5 +65,5 @@ try:
 		line = f.readline()
 
 	f.close()
-except IOError:  # Si da error, no hace nada
+except IOError:  # If error, do nothing
 	pass
